@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>みずほの因果推論研究：ICML 2024採択論文のインタラクティブ解説</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Calm Harmony" - Background: #F8F9FA, Primary Text: #212529, Primary Accent: #00529B (Mizuho Blue), Secondary Accent: #4A90E2, Highlight: #F5A623 -->
+    <!-- Application Structure Plan: The application is designed as a single-page narrative journey. It starts with a high-impact hero section stating the core achievement. A sticky navigation allows users to jump to thematic sections: 1. **The Challenge:** Explains the business problem (why a bank needs causal inference). 2. **The Breakthrough:** An interactive diagram to explain the core innovation (Covariate Choice + Propensity Score). This is the centerpiece, designed for active learning. 3. **The Landscape:** An interactive comparison table to contextualize the research. 4. **The Impact:** Shows the broader implications for industry and future research. This thematic, non-linear structure is chosen over a direct report summary to guide the user from the "why" to the "how" and then to the "so what," enhancing comprehension and engagement for a non-expert audience. -->
+    <!-- Visualization & Content Choices: 1. **ICML Acceptance Rate (Inform/Impress):** A dynamic Donut chart (Chart.js) visualizes the ~1.5% acceptance rate, making the achievement tangible. Interaction: Hover to see details. 2. **Core Innovation (Explain/Engage):** A custom interactive diagram built with HTML/CSS/JS. Goal: Simplify the complex idea of dual optimization. Interaction: User clicks toggles ("対象者の選択," "割り当ての最適化") to see the experimental design process change visually and read corresponding explanations. This active engagement is superior to static text for explaining a process. 3. **Comparison Table (Compare/Organize):** An interactive HTML table. Goal: Situate Mizuho's work. Interaction: Row hover effects to improve readability. This is more engaging than a static image of a table. Justification: These choices prioritize interactivity and visual storytelling to make a dense academic topic accessible and memorable. Library: Chart.js for the chart. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #F8F9FA;
+            color: #212529;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            margin: 1rem auto;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #F5A623;
+        }
+        .btn-primary {
+            background-color: #00529B;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #003F7A;
+        }
+        .section-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        #interactive-diagram .step-box, #interactive-diagram .arrow, #interactive-diagram .person-icon {
+            transition: all 0.5s ease-in-out;
+        }
+        .person-icon-base {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+        .person-default { background-color: #6c757d; }
+        .person-info-rich { background-color: #F5A623; }
+        .person-treatment { background-color: #4A90E2; }
+        .person-control { background-color: #adb5bd; }
+        .comparison-table tr:hover td {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-xl font-bold text-[#00529B]">Mizuho Causal Inference Research</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#overview" class="nav-link">概要</a>
+                    <a href="#why-it-matters" class="nav-link">なぜ重要か</a>
+                    <a href="#core-tech" class="nav-link">核心技術</a>
+                    <a href="#comparison" class="nav-link">研究の位置づけ</a>
+                    <a href="#impact" class="nav-link">広範な影響</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="hero" class="text-center mb-20">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#00529B] mb-4">実験計画のフロンティアを拓く</h1>
+            <p class="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+                みずほフィナンシャルグループの研究が、機械学習トップカンファレンスICML 2024で口頭発表に採択。
+                <br>これは、より少なく、より賢くデータを活用する新時代の幕開けです。
+            </p>
+            <div class="flex justify-center items-center gap-8 flex-wrap">
+                <div class="section-card max-w-sm">
+                    <h3 class="text-xl font-bold text-[#00529B] mb-2">驚異の採択率 1.5%</h3>
+                    <p class="text-gray-600 mb-4">9,473本の投稿の中から、わずか144本のみが選ばれる口頭発表。その一つに、みずほの研究が選ばれました。</p>
+                    <div class="chart-container">
+                        <canvas id="acceptanceRateChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="space-y-20">
+
+        <section id="overview" class="section-card">
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#00529B]">ビジネスの「なぜ？」に科学で答える</h2>
+            <p class="text-lg text-center text-gray-600 mb-12 max-w-3xl mx-auto">全ての施策には「効果」が求められます。しかし、その真の効果を測ることは簡単ではありません。このセクションでは、みずほがなぜ「因果推論」という最先端の科学的アプローチに注目したのか、その背景にあるビジネス課題を探ります。</p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">課題：本当に効果があったのは？</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        デジタルマーケティングで新しいキャンペーンを実施したとします。「売上が上がった」としても、それは本当にキャンペーンのおかげでしょうか？それとも、偶然のタイミング、季節要因、あるいは他の要因が影響したのでしょうか？<br><br>
+                        この「AをしたからBが起きた」という因果関係を正確に突き止めるのが「因果推論」です。みずほは、この技術を応用することで、施策の効果を正しく測定し、データに基づいた再現性のある意思決定を目指しています。
+                    </p>
+                </div>
+                <div class="text-center p-8 bg-blue-50 rounded-lg">
+                    <span class="text-6xl mb-4 inline-block">🤔</span>
+                    <p class="text-xl font-semibold text-gray-800">「このキャンペーンは、本当に顧客のためになったのか？」</p>
+                    <p class="text-gray-600 mt-2">この問いに確信を持って答えるための挑戦が、本研究の出発点です。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="why-it-matters" class="section-card">
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#00529B]">より少なく、より速く、より賢く</h2>
+             <p class="text-lg text-center text-gray-600 mb-12 max-w-3xl mx-auto">みずほの研究がもたらすブレークスルーは、単なる学術的な進歩ではありません。それは、ビジネスにおける実験のあり方を根本から変える可能性を秘めています。このセクションでは、その具体的なメリットを分かりやすく解説します。</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <div class="text-4xl mb-4">📉</div>
+                    <h3 class="text-xl font-bold mb-2">コスト削減</h3>
+                    <p class="text-gray-600">より少ないサンプル（調査対象者）で効果を検証できるため、高コストなキャンペーンや調査の費用を大幅に削減できます。</p>
+                </div>
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <div class="text-4xl mb-4">⚡️</div>
+                    <h3 class="text-xl font-bold mb-2">意思決定の高速化</h3>
+                    <p class="text-gray-600">施策の効果をより迅速に判断できるため、成功した施策は素早く展開し、失敗した施策は早期に改善できます。学習サイクルが加速します。</p>
+                </div>
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <div class="text-4xl mb-4">💡</div>
+                    <h3 class="text-xl font-bold mb-2">イノベーションの促進</h3>
+                    <p class="text-gray-600">実験のハードルが下がることで、より多くの新しいアイデアを試すことが可能になり、イノベーションが生まれやすくなります。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="core-tech" class="section-card">
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#00529B]">核心技術：2つのレバーによる最適化</h2>
+            <p class="text-lg text-center text-gray-600 mb-12 max-w-3xl mx-auto">本研究の最大のブレークスルーは、実験の効率を最大化するために2つの要素を「同時に」最適化する点にあります。このインタラクティブな図解を通じて、その革新的なアイデアを体感してください。</p>
+            
+            <div class="bg-gray-50 p-6 rounded-lg">
+                <div class="flex justify-center gap-4 mb-8 flex-wrap">
+                    <button id="toggle-covariate" class="btn-primary px-4 py-2 rounded-full">① 対象者の選択を最適化</button>
+                    <button id="toggle-propensity" class="btn-primary px-4 py-2 rounded-full">② 割り当てを最適化</button>
+                    <button id="reset-diagram" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600">リセット</button>
+                </div>
+
+                <div id="interactive-diagram" class="flex flex-col items-center p-4 space-y-4">
+                    <div class="text-center">
+                        <h4 class="font-bold text-lg">実験のプロセス</h4>
+                        <p id="diagram-explanation" class="text-gray-600 mt-1 transition-opacity duration-500">初期状態：ランダムな対象者グループから始めます。</p>
+                    </div>
+
+                    <div id="population" class="flex flex-wrap justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg w-full">
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                        <div class="person-icon-base person-default person-icon">👤</div>
+                    </div>
+                    <div class="arrow text-3xl text-gray-400">⬇️</div>
+                    <div class="step-box p-4 border-2 border-gray-400 rounded-lg text-center bg-white w-full max-w-md">
+                        <h4 id="step-title" class="font-bold">Step 1: 実験対象のグループ</h4>
+                        <p id="step-desc" class="text-sm text-gray-600">これが私たちの実験に参加する人々です。</p>
+                    </div>
+                    <div class="arrow text-3xl text-gray-400">⬇️</div>
+                    <div class="flex justify-around w-full max-w-md">
+                         <div class="text-center">
+                            <h4 class="font-bold">処置群</h4>
+                            <div id="treatment-group" class="p-2 border-2 border-dashed border-blue-300 rounded-lg min-h-[60px] flex gap-2 flex-wrap justify-center items-center mt-2"></div>
+                         </div>
+                         <div class="text-center">
+                            <h4 class="font-bold">対照群</h4>
+                            <div id="control-group" class="p-2 border-2 border-dashed border-gray-300 rounded-lg min-h-[60px] flex gap-2 flex-wrap justify-center items-center mt-2"></div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-xl mb-2 text-[#00529B]">① 対象者の選択 (共変量密度の最適化)</h3>
+                    <p class="text-gray-700">従来の手法では、実験対象者をランダムに選びがちでした。みずほの手法では、まず「誰を実験に含めるか」を最適化します。具体的には、結果のばらつきが大きい、つまり「情報量の多い」人々を意図的に多く選びます。これにより、実験全体の効率が格段に向上します。</p>
+                </div>
+                 <div>
+                    <h3 class="font-bold text-xl mb-2 text-[#00529B]">② 割り当ての最適化 (傾向スコアの最適化)</h3>
+                    <p class="text-gray-700">次に対象者を「処置群（例：キャンペーン対象）」と「対照群（対象外）」にどう分けるかを最適化します。これも過去のデータから学習し、ATE（平均処置効果）の推定精度が最も高くなるように割り当て確率を調整します。みずほの研究は、①と②を同時に最適化する点に最大の新規性があります。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="section-card">
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#00529B]">研究の位置づけ：先行研究との比較</h2>
+            <p class="text-lg text-center text-gray-600 mb-12 max-w-3xl mx-auto">どんな研究も、過去の知見の積み重ねの上に成り立っています。このセクションでは、みずほの提案手法が、既存の実験計画手法と比較してどのような点で革新的なのかを比較表で示します。</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse comparison-table">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-4 border-b-2 font-bold">特徴</th>
+                            <th class="p-4 border-b-2 font-bold">標準的RCT</th>
+                            <th class="p-4 border-b-2 font-bold">適応的実験(傾向スコアのみ)</th>
+                            <th class="p-4 border-b-2 font-bold text-[#00529B]">みずほの手法</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="p-4 font-semibold">最適化の対象</td>
+                            <td class="p-4">なし（完全ランダム）</td>
+                            <td class="p-4">処置の割り当て</td>
+                            <td class="p-4 text-[#00529B] font-bold">対象者の選択 + 処置の割り当て</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-4 font-semibold">主な目的</td>
+                            <td class="p-4">バイアスのない推定</td>
+                            <td class="p-4">効率性向上</td>
+                            <td class="p-4 text-[#00529B] font-bold">ATE推定精度の最大化</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-4 font-semibold">革新性</td>
+                            <td class="p-4">因果推論の基本</td>
+                            <td class="p-4">実験中に割り当てを調整</td>
+                            <td class="p-4 text-[#00529B] font-bold">実験対象の選択自体を最適化に組み込む</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="impact" class="section-card">
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#00529B]">広範な影響と未来への展望</h2>
+            <p class="text-lg text-center text-gray-600 mb-12 max-w-3xl mx-auto">この研究成果は、金融業界にとどまらず、データに基づいた意思決定を行うあらゆる産業、そして未来の研究に大きな影響を与える可能性があります。</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6">
+                    <div class="text-4xl mb-4">🏦</div>
+                    <h3 class="text-xl font-bold mb-2">金融サービスへの応用</h3>
+                    <p class="text-gray-600">マーケティングだけでなく、信用リスクモデルの評価、新商品開発、パーソナライズされた金融アドバイスの効果測定など、応用範囲は多岐にわたります。</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-4xl mb-4">🌐</div>
+                    <h3 class="text-xl font-bold mb-2">他産業への波及</h3>
+                    <p class="text-gray-600">医薬品の臨床試験、ECサイトのUI/UX改善、教育プログラムの効果測定など、ATE推定が重要なあらゆる分野で実験の効率化に貢献します。</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-4xl mb-4">🔬</div>
+                    <h3 class="text-xl font-bold mb-2">未来の研究への貢献</h3>
+                    <p class="text-gray-600">本研究は、より複雑な状況（複数の処置、効果の個人差など）への拡張や、倫理的な側面との両立など、新たな研究テーマへの扉を開きます。</p>
+                </div>
+            </div>
+        </section>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2024 Mizuho Causal Inference Research Interactive. All rights reserved.</p>
+            <p class="text-sm text-gray-400 mt-2">
+                このページは、みずほフィナンシャルグループの公開情報を基に作成された解説コンテンツです。<br>
+                <a href="https://www.mizuho-fg.co.jp/dx/articles/ft-icml/index.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#F5A623]">
+                    元の記事はこちら
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const acceptanceRateData = {
+                labels: ['口頭発表 (Oral)', 'その他の投稿 (Others)'],
+                datasets: [{
+                    data: [144, 9473 - 144],
+                    backgroundColor: ['#F5A623', '#e9ecef'],
+                    borderColor: ['#fff', '#fff'],
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+
+            const acceptanceRateConfig = {
+                type: 'doughnut',
+                data: acceptanceRateData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                color: '#495057'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((context.raw / total) * 100).toFixed(2);
+                                        label += `${context.raw.toLocaleString()}本 (${percentage}%)`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const acceptanceRateChart = new Chart(
+                document.getElementById('acceptanceRateChart'),
+                acceptanceRateConfig
+            );
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, 
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            const diagramState = {
+                covariate: false,
+                propensity: false
+            };
+
+            const populationEl = document.getElementById('population');
+            const explanationEl = document.getElementById('diagram-explanation');
+            const stepTitleEl = document.getElementById('step-title');
+            const stepDescEl = document.getElementById('step-desc');
+            const treatmentGroupEl = document.getElementById('treatment-group');
+            const controlGroupEl = document.getElementById('control-group');
+
+            const initialPopulationHTML = populationEl.innerHTML;
+
+            function updateDiagram() {
+                const persons = Array.from(populationEl.querySelectorAll('.person-icon'));
+                
+                if (diagramState.covariate) {
+                    explanationEl.textContent = 'Step 1: 情報量の多い対象者を意図的に選びます（黄色の人々）。';
+                    persons.forEach((p, i) => {
+                        p.classList.remove('person-default');
+                        p.classList.toggle('person-info-rich', i < 4);
+                        p.classList.toggle('person-default', i >= 4);
+                    });
+                } else {
+                     explanationEl.textContent = '初期状態：ランダムな対象者グループから始めます。';
+                     persons.forEach(p => {
+                        p.classList.remove('person-info-rich');
+                        p.classList.add('person-default');
+                    });
+                }
+
+                treatmentGroupEl.innerHTML = '';
+                controlGroupEl.innerHTML = '';
+
+                if(diagramState.propensity) {
+                     explanationEl.textContent += ' Step 2: 最適化されたルールで処置群と対照群に割り当てます。';
+                     const selectedPopulation = diagramState.covariate ? persons.slice(0, 4) : persons;
+                     
+                     selectedPopulation.forEach((p, i) => {
+                        const newPerson = p.cloneNode(true);
+                        newPerson.classList.remove('person-default', 'person-info-rich');
+                         if(i % 2 === 0) {
+                            newPerson.classList.add('person-treatment');
+                            treatmentGroupEl.appendChild(newPerson);
+                         } else {
+                            newPerson.classList.add('person-control');
+                            controlGroupEl.appendChild(newPerson);
+                         }
+                     });
+                }
+            }
+
+            document.getElementById('toggle-covariate').addEventListener('click', () => {
+                diagramState.covariate = true;
+                updateDiagram();
+            });
+
+            document.getElementById('toggle-propensity').addEventListener('click', () => {
+                diagramState.propensity = true;
+                updateDiagram();
+            });
+
+            document.getElementById('reset-diagram').addEventListener('click', () => {
+                diagramState.covariate = false;
+                diagramState.propensity = false;
+                populationEl.innerHTML = initialPopulationHTML;
+                updateDiagram();
+            });
+        });
+    </script>
+</body>
+</html>
