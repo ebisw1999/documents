@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Generators Presentation Slide</title>
+<style>
+    :root {
+        --primary-color: #003366; /* Deep Financial Blue */
+        --accent-color: #E63946; /* Alert Red for Challenges */
+        --success-color: #2A9D8F; /* Green for Benefits */
+        --bg-color: #f4f4f9;
+        --text-color: #333;
+    }
+    body {
+        margin: 0;
+        padding: 20px;
+        background-color: #e0e0e0;
+        font-family: 'Segoe UI', Meiryo, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .slide-container {
+        width: 1280px;
+        height: 720px; /* 16:9 Aspect Ratio */
+        background-color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        display: grid;
+        grid-template-rows: 80px 1fr 50px;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+
+    /* Header */
+    header {
+        border-bottom: 3px solid var(--primary-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        padding-bottom: 10px;
+    }
+    h1 {
+        margin: 0;
+        color: var(--primary-color);
+        font-size: 36px;
+    }
+    .subtitle {
+        font-size: 18px;
+        color: #666;
+    }
+
+    /* Content Grid */
+    .content {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 30px;
+        padding-top: 30px;
+    }
+
+    /* Column Styles */
+    .col {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+    }
+    .col-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        display: block;
+        border-bottom: 2px solid #ddd;
+    }
+
+    /* Section 1: Trends */
+    .trend-box {
+        background-color: #f0f4f8;
+        padding: 15px;
+        border-radius: 8px;
+        position: relative;
+    }
+    .trend-step {
+        margin-bottom: 15px;
+        padding-left: 15px;
+        border-left: 4px solid var(--primary-color);
+    }
+    .trend-highlight {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    .arrow-down {
+        text-align: center;
+        font-size: 20px;
+        color: #999;
+        margin: -10px 0 10px 0;
+    }
+
+    /* Section 2: Merits */
+    .benefit-item {
+        margin-bottom: 20px;
+    }
+    .benefit-icon {
+        color: var(--success-color);
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    .benefit-desc {
+        font-size: 0.95em;
+        color: #444;
+        margin-top: 5px;
+    }
+
+    /* Section 3: Challenges */
+    .challenge-box {
+        border: 1px dashed var(--accent-color);
+        background-color: #fff5f5;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    .challenge-title {
+        color: var(--accent-color);
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .comparison {
+        font-size: 0.85em;
+        color: #555;
+    }
+
+    /* Footer */
+    footer {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #ddd;
+        font-size: 14px;
+        color: #777;
+    }
+    .source-note {
+        margin-left: auto;
+        font-style: italic;
+    }
+
+    /* Bullet points refinement */
+    ul {
+        padding-left: 20px;
+        margin: 5px 0;
+    }
+    li {
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+    <header>
+        <div>
+            <h1>Market Generators: 金融モデリングのパラダイムシフト</h1>
+            <div class="subtitle">〜古典的確率モデルから生成的AIへの転換と、実務適用の可能性〜</div>
+        </div>
+        <div style="text-align: right; font-size: 0.8em; color: var(--primary-color);">
+            2026年度 提案資料
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="col">
+            <span class="col-title" style="color: var(--primary-color);">1. 進化の現在地</span>
+            <div class="trend-box">
+                <div class="trend-step">
+                    <strong>2019年頃〜: 概念の確立</strong><br>
+                    [span_0](start_span)<span style="font-size:0.9em">「Market Generator」という用語が定着し、研究分野として独立[span_0](end_span)。</span>
+                </div>
+                <div class="arrow-down">▼</div>
+                <div class="trend-step">
+                    <strong>Deep Learningの適用</strong><br>
+                    [span_1](start_span)[span_2](start_span)<span style="font-size:0.9em">GANs, VAEsにより、複雑な分布の学習が可能に[span_1](end_span)[span_2](end_span)。</span>
+                </div>
+                <div class="arrow-down">▼</div>
+                <div class="trend-step">
+                    <strong class="trend-highlight">現在: 基盤モデル・Path-wise</strong><br>
+                    [span_3](start_span)<span style="font-size:0.9em">GPT等の生成AIトレンドとの融合[span_3](end_span)[span_4](start_span)[span_5](start_span)。時系列の「経路（Path）」全体を捉える手法へ進化[span_4](end_span)[span_5](end_span)。</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <span class="col-title" style="color: var(--success-color);">2. 金融実務への意義</span>
+            
+            <div class="benefit-item">
+                <div class="benefit-icon">✔ データプライバシーと共有</div>
+                <div class="benefit-desc">
+                    [span_6](start_span)[span_7](start_span)本物の顧客データは共有困難だが、統計的に等価な「合成データ」であれば、外部機関との連携やモデル検証に利用可能[span_6](end_span)[span_7](end_span)。
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">✔ 未知のリスク(Tail Risk)の捕捉</div>
+                <div class="benefit-desc">
+                    [span_8](start_span)[span_9](start_span)過去データには存在しないが起こりうる「極端なシナリオ」を生成し、リスク管理やストレステストを高度化[span_8](end_span)[span_9](end_span)。
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">✔ 柔軟なモデリング</div>
+                <div class="benefit-desc">
+                    [span_10](start_span)古典的なパラメトリックモデルの制約（正規分布の仮定など）を超え、市場の複雑な非線形性をデータから直接学習[span_10](end_span)。
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <span class="col-title" style="color: var(--accent-color);">3. 技術的困難性</span>
+            <p style="font-size: 0.9em; margin-bottom: 15px;">
+                [span_11](start_span)画像生成AIの成功事例を、そのまま金融には適用できない独自の壁が存在する[span_11](end_span)。
+            </p>
+
+            <div class="challenge-box">
+                <div class="challenge-title">⚠ "Visual Inspection"の限界</div>
+                <div class="comparison">
+                    <strong>画像:</strong> 目視で「犬」とわかれば成功。<br>
+                    [span_12](start_span)[span_13](start_span)<strong>金融:</strong> 見た目がもっともらしくても、統計的性質（分布）が正しくなければ無価値[span_12](end_span)[span_13](end_span)。
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <div class="challenge-title">⚠ 構造的不変性の欠如</div>
+                <div class="comparison">
+                    <strong>画像:</strong> 反転しても意味は変わらない。<br>
+                    [span_14](start_span)<strong>金融:</strong> 時系列の反転や変形は、市場の因果律や裁定機会の整合性を破壊する[span_14](end_span)。
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <div class="challenge-title">⚠ 市場の非定常性</div>
+                <div class="comparison">
+                    [span_15](start_span)市場のルール（レジーム）は常に変化するため、過去データの学習だけでは対応できない局面がある[span_15](end_span)。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        [span_16](start_span)[span_17](start_span)<div><strong>Conclusion:</strong> 生成モデルはリスク管理とデータ活用の強力なツールだが、評価指標（Metric）の設計が成功の鍵を握る[span_16](end_span)[span_17](end_span)。</div>
+        <div class="source-note">Source: Horvath et al., "Market Generators: A Paradigm Shift in Financial Modeling"</div>
+    </footer>
+</div>
+
+</body>
+</html>
