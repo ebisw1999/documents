@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Generators Presentation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 { font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", sans-serif; text-transform: none; }
+        .reveal p, .reveal li { font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", sans-serif; }
+        .citation { font-size: 0.4em !important; color: #666; vertical-align: super; }
+        .highlight-box { background-color: #f0f8ff; border-left: 5px solid #007bff; padding: 15px; margin: 20px 0; text-align: left; }
+        .split-container { display: flex; justify-content: space-between; align-items: center; }
+        .split-col { flex: 1; padding: 10px; }
+        .comparison-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); height: 100%; }
+        .alert { color: #d9534f; font-weight: bold; }
+        .success { color: #5cb85c; font-weight: bold; }
+        .small-text { font-size: 0.6em !important; }
+    </style>
+</head>
+<body>
+
+<div class="reveal">
+    <div class="slides">
+
+        <section>
+            <h2>金融モデリングのパラダイムシフト</h2>
+            <h3>Market Generatorsの台頭</h3>
+            <p style="color: #555; margin-top: 50px;">～古典的確率モデルから、データ駆動型の生成AIへ～</p>
+            <div style="font-size: 0.6em; margin-top: 50px; color: #888;">
+                Based on: "Market Generators: A Paradigm Shift in Financial Modeling"<br>
+                [span_0](start_span)Horvath, Plenk, and Vuletić (2026)[span_0](end_span)
+            </div>
+        </section>
+
+        <section>
+            <h3>生成モデルの進化と現在地</h3>
+            <div class="split-container">
+                <div class="split-col" style="font-size: 0.7em; text-align: left;">
+                    <ul>
+                        <li style="margin-bottom: 20px;">
+                            <strong>2013-2014: 夜明け</strong><br>
+                            VAE (変分オートエンコーダ) と GAN (敵対的生成NW) が登場。<br>
+                            [span_1](start_span)識別タスクから「生成」タスクへの移行。<span class="citation">[cite: 68-72]</span>
+                        </li>
+                        <li style="margin-bottom: 20px;">
+                            <strong>2017: 言語革命</strong><br>
+                            Transformer (Attention機構) の登場。<br>
+                            [cite_start]時系列データの文脈理解に革新。<span class="citation">[cite: 73-74]</span>
+                        </li>
+                        <li style="margin-bottom: 20px;">
+                            <strong>2020s-現在: 生成AIの民主化</strong><br>
+                            拡散モデル (Diffusion Models) とLLM。<br>
+                            [cite_start]高品質な画像生成と、金融特化基盤モデルの模索。<span class="citation">[cite: 78-80, 202]</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="split-col">
+                   <div style="border: 2px dashed #ccc; padding: 20px; color: #888;">
+                       
+                       <br><br>
+                       <small>進化のタイムライン図</small>
+                   </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3>なぜ今、金融時系列生成なのか？</h3>
+            <div class="highlight-box">
+                <h4 style="margin: 0;">3つの主要な提供価値</h4>
+            </div>
+            <div style="font-size: 0.8em; text-align: left;">
+                <ol>
+                    <li style="margin-bottom: 15px;">
+                        <strong>データプライバシーの保護 (Privacy)</strong><br>
+                        [cite_start]顧客情報を漏洩しない「合成データ」により、外部共有や監査が可能に。<span class="citation">[cite: 151-154]</span>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>データ不足の解消 (Scarcity)</strong><br>
+                        [cite_start]Deep Hedgingのような「データ食い」なモデルに対し、現実には存在しないが起こりうるシナリオ（極端なイベント等）を供給。<span class="citation">[cite: 155-157]</span>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>柔軟なモデリング (Flexibility)</strong><br>
+                        [cite_start]「正規分布」などの強い仮定を置く古典的モデルと異なり、複雑・非線形な市場構造をデータから直接学習。<span class="citation">[cite: 141-142]</span>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section>
+            <h3>画像生成と金融時系列の決定的な違い</h3>
+            [cite_start]<p class="small-text">画像AIの技術をそのまま適用できない理由：「不変性」の欠如 <span class="citation">[cite: 84-88]</span></p>
+            
+            <div class="split-container" style="margin-top: 30px;">
+                <div class="split-col comparison-card" style="background-color: #f9f9f9;">
+                    <h4>画像の世界</h4>
+                    <div style="margin: 10px 0; color: #555;"></div>
+                    <p style="font-size: 0.6em;">
+                        犬の写真を回転させても<br>
+                        <strong>「犬」であることは変わらない。</strong><br>
+                        <span class="success">構造的な不変性がある</span>
+                    </p>
+                </div>
+                
+                <div class="split-col" style="font-size: 2em;">VS</div>
+                
+                <div class="split-col comparison-card" style="background-color: #fff0f0;">
+                    <h4>金融の世界</h4>
+                    <div style="margin: 10px 0; color: #555;"></div>
+                    <p style="font-size: 0.6em;">
+                        チャートを回転・反転させると<br>
+                        <strong>経済的な意味が破壊される。</strong><br>
+                        <span class="alert">「既製品」AIの安易な流用は危険</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3>評価の難しさ：正解は「1つ」ではない</h3>
+            <div style="text-align: left; font-size: 0.8em;">
+                [cite_start]<p><strong>画像の場合：</strong>「本物に見えるか？」という視覚的検査が可能。<span class="citation">[span_1](end_span)</span></p>
+                <p><strong>金融の場合：</strong></p>
+                <ul>
+                    [span_2](start_span)<li>単一のパスではなく、<strong>「確率分布」全体</strong>の再現性が重要。<span class="citation">[cite: 93-94]</span></li>
+                    [cite_start]<li>市場は常に変化する（非定常性）ため、過去の再現だけでは不十分。<span class="citation">[span_2](end_span)</span></li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: 20px; border: 1px solid #ddd; padding: 10px;">
+                 <div style="color: #888;"></div>
+                 [span_3](start_span)<p class="small-text">点予測（Point Estimate）ではなく、確率的予測（Probabilistic Output）が必要 <span class="citation">[cite: 125-128]</span></p>
+            </div>
+        </section>
+
+        <section>
+            <h3>今後の展望と提案</h3>
+            <div style="text-align: left; font-size: 0.8em;">
+                <p><strong>1. 「経路 (Path)」全体を捉える技術へ</strong></p>
+                <ul>
+                    [cite_start]<li>シグネチャ法 (Signature Methods) 等を用い、複雑な依存関係を効率的に学習するモデルへの移行。<span class="citation">[cite: 216-224]</span></li>
+                </ul>
+                
+                <p style="margin-top: 20px;"><strong>2. 高度な評価指標 (Discriminator) の活用</strong></p>
+                <ul>
+                    [cite_start]<li>生成データの品質評価用に開発した識別器は、市場の「異常検知」や「レジーム変化検知」にも転用可能。<span class="citation">[cite: 353-356]</span></li>
+                </ul>
+                
+                <div class="highlight-box" style="margin-top: 30px; border-left-color: #28a745;">
+                    <strong>Next Step:</strong><br>
+                    単なる予測精度の追求ではなく、リスク管理・ヘッジ戦略に直結する「高品質シミュレータ」としての実装を目指す。
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script>
+    Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+    });
+</script>
+</body>
+</html>
